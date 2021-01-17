@@ -1,0 +1,11 @@
+version: "3"
+services:
+  todof:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/src/app
+    command: sh -c "cd todof && yarn start"
+    ports:
+      - "3000:3000"
