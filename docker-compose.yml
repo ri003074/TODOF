@@ -5,8 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/usr/src/app
-    command: sh -c "cd todof && yarn start"
+      - ./todof:/usr/src/app/
+      - /usr/src/app/node_modules
+    command: sh -c "yarn start"
     ports:
       - "3000:3000"
 
