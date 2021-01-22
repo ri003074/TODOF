@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import './App.css'
 
 const App = () => {
     const [tasks, setTasks] = useState([])
@@ -13,13 +14,27 @@ const App = () => {
     }, [])
 
     return (
-        <div>
-            {
-                tasks.map((task, index) =>
-                    <div key={task.id}>{task.title}</div>
-                )
-            }
-        </div>
+        <div className="container">
+            <h1>
+                <button>Purge</button>
+            My Todos
+            <span>(1/2)</span>
+            </h1>
+            <ul>
+                {
+                    tasks.map((task, index) =>
+
+                        <li key={task.id}>
+                            <label>
+                                <input type="checkbox" />
+                                {task.title}
+                            </label>
+                            <span className="cmd">[x]</span>
+                        </li>
+                    )
+                }
+            </ul>
+        </div >
     );
 }
 
