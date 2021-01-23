@@ -60,7 +60,6 @@ const App = () => {
 
     return (
         <div className="container">
-
             {
                 token ? (
                     <h1>
@@ -101,7 +100,7 @@ const App = () => {
                             <input type="text" className="form-control form-control-sm mb-2 p-1" name="email" placeholder="email" value={userInfo.email} onChange={handleUserInfoChange()} />
                             <input type="password" className="form-control form-control-sm mb-2 p-1" name="password" placeholder="password" value={userInfo.password} onChange={handleUserInfoChange()} />
                             <div className="text-right">
-                                <button className="btn btn-outline-dark" onClick={() => logIn()}>logIn</button>
+                                <button className="btn btn-outline-dark col-12" onClick={() => logIn()}>logIn</button>
                             </div>
                         </>
                     )
