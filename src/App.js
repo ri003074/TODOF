@@ -62,7 +62,13 @@ const App = () => {
                 <div className="dropdown">
                     <button className="dropbtn">Menu</button>
                     <div className="dropdown-content">
-                        <div className="dropdown-content-item" onClick={() => logOut()}>logOut</div>
+                        {
+                            token ? (
+                                <div className="dropdown-content-item" onClick={() => logOut()}>logOut</div>
+                            ) : (
+                                    <></>
+                                )
+                        }
                     </div>
                 </div>
             My Todos
