@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 const App = () => {
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
-    const [userInfo, setUserInfo] = useState({ username: 'kenta', email: 'kenta@gmail.com', password: 'kawamoto' })
+    const [userInfo, setUserInfo] = useState({ username: '', email: '', password: '' })
 
     useEffect(() => {
         setToken(localStorage.getItem('token'))
@@ -18,7 +19,6 @@ const App = () => {
             })
             .then(res => {
                 setTasks(res.data);
-                console.log(res.data)
             })
             .catch((error) => {
                 localStorage.clear()
@@ -38,43 +38,47 @@ const App = () => {
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/login/`, userInfo, {
         })
             .then(res => {
+                console.log(res)
                 setToken("Token " + res.data.key);
                 localStorage.clear();
                 localStorage.setItem('token', "Token " + res.data.key);
                 window.location.reload()
             })
+            .catch((error) => {
+                localStorage.clear()
+                console.log(error)
+            })
     }
     const logOut = () => {
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/logout/`, {
         }).then(res => {
-            console.log(res)
             localStorage.setItem("token", "");
             window.location.reload()
         })
 
     }
 
-    console.log("token", token)
-
     return (
         <div className="container">
-            <h1>
-                <div className="dropdown">
-                    <button className="dropbtn">Menu</button>
-                    <div className="dropdown-content">
-                        {
-                            token ? (
-                                <div className="dropdown-content-item" onClick={() => logOut()}>logOut</div>
-                            ) : (
-                                    <></>
-                                )
-                        }
-                    </div>
-                </div>
-            My Todos
-            <span>(1/2)</span>
-            </h1>
 
+            {
+                token ? (
+                    <h1>
+                        <div className="dropdown">
+                            <button className="dropbtn">Menu</button>
+                            <div className="dropdown-content">
+                                <div className="dropdown-content-item" onClick={() => logOut()}>logOut</div>
+                            </div>
+                        </div>
+                            My Todos
+                        <span>(1/2)</span>
+                    </h1>
+                ) : (
+                        <>
+                            <h1 className="text-center">My Todos</h1>
+                        </>
+                    )
+            }
             {
                 token ? (
                     <ul>
@@ -93,9 +97,12 @@ const App = () => {
                     </ul>
                 ) : (
                         <>
-                            <input type="text" placeholder="email" value={userInfo.email} onChange={handleUserInfoChange()} />
-                            <input type="text" placeholder="password" value={userInfo.password} onChange={handleUserInfoChange()} />
-                            <button onClick={() => logIn()}>logIn</button>
+                            <input type="text" className="form-control form-control-sm mb-2 p-1" name="username" placeholder="username" value={userInfo.username} onChange={handleUserInfoChange()} />
+                            <input type="text" className="form-control form-control-sm mb-2 p-1" name="email" placeholder="email" value={userInfo.email} onChange={handleUserInfoChange()} />
+                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password" placeholder="password" value={userInfo.password} onChange={handleUserInfoChange()} />
+                            <div className="text-right">
+                                <button className="btn btn-outline-dark" onClick={() => logIn()}>logIn</button>
+                            </div>
                         </>
                     )
             }

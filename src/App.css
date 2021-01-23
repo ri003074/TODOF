@@ -110,3 +110,11 @@ body {
   .dropdown:hover .dropbtn {
     background-color: #3e8e41;
   }
+
+  .form-control:focus{
+      box-shadow:none;
+      border-color:#ced4da;
+  }
+  .btn-outline-dark.focus, .btn-outline-dark:focus {
+    box-shadow: none;
+}
