@@ -22,7 +22,12 @@ const App = () => {
     return (
         <div className="container">
             <h1>
-                <button>Purge</button>
+                <div className="dropdown">
+                    <button className="dropbtn">Menu</button>
+                    <div className="dropdown-content">
+                        <div className="dropdown-content-item">logOut</div>
+                    </div>
+                </div>
             My Todos
             <span>(1/2)</span>
             </h1>
