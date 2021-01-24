@@ -4,6 +4,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 const App = () => {
+    // const [url] = useState("http://localhost:8000")
+    const [url] = useState("https://enigmatic-stream-15237.herokuapp.com")
+
     const [editTask, setEditTask] = useState('')
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
@@ -13,8 +16,7 @@ const App = () => {
     useEffect(() => {
 
         setToken(localStorage.getItem('token'))
-        axios.get('https://enigmatic-stream-15237.herokuapp.com/api/tasks/',
-            // axios.get(`http://localhost:8000/api/tasks/`,
+        axios.get(`${url}/api/tasks/`,
             {
                 headers: {
                     Authorization: localStorage.getItem('token'),
@@ -27,8 +29,7 @@ const App = () => {
                 localStorage.clear()
             })
 
-        axios.get('https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/user/',
-            // axios.get(`http://localhost:8000/dj-rest-auth/user/`,
+        axios.get(`${url}/dj-rest-auth/user/`,
             {
                 headers: {
                     Authorization: localStorage.getItem('token'),
@@ -40,7 +41,7 @@ const App = () => {
             .catch((error) => {
                 console.log(error)
             })
-    }, [])
+    }, [url])
 
     const handleUserInfoChange = () => evt => {
         const value = evt.target.value
@@ -53,8 +54,7 @@ const App = () => {
     }
 
     const SignUp = () => {
-        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/registration/`, userInfo, {
-            // axios.post(`http://localhost:8000/dj-rest-auth/registration/`, userInfo, {
+        axios.post(`${url}/dj-rest-auth/registration/`, userInfo, {
         })
             .then(res => {
                 setToken("Token " + res.data.key);
@@ -74,8 +74,8 @@ const App = () => {
             email: userInfo.email,
             password: userInfo.password1,
         }
-        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/login/`, logInInfo, {
-            // axios.post(`http://localhost:8000/dj-rest-auth/login/`, logInInfo, {
+
+        axios.post(`${url}/dj-rest-auth/login/`, logInInfo, {
         })
             .then(res => {
                 setToken("Token " + res.data.key);
@@ -89,7 +89,7 @@ const App = () => {
     }
 
     const logOut = () => {
-        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/logout/`, {
+        axios.post(`${url}/dj-rest-auth/logout/`, {
         }).then(res => {
             localStorage.setItem("token", "");
             window.location.reload()
@@ -102,13 +102,21 @@ const App = () => {
             title: task,
             user_id: userId
         }
-        axios.post(`https://enigmatic-stream-15237.herokuapp.com/api/tasks/`, data, {
-            // axios.post(`http://localhost:8000/api/tasks/`, data, {
+        axios.post(`${url}/api/tasks/`, data, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': localStorage.getItem('token')
             }
         }).then(res => setTasks([...tasks, res.data]))
+    }
+
+    const deleteTask = (id) => {
+        axios.delete(`${url}/api/tasks/${id}/`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(res => setTasks(tasks.filter(task => task.id !== id)))
     }
 
     return (
@@ -140,9 +148,11 @@ const App = () => {
                                 <li key={task.id}>
                                     <label>
                                         <input type="checkbox" />
-                                        {task.title}
+                                        <span className="">
+                                            {task.title}
+                                        </span>
                                     </label>
-                                    <span className="cmd">[x]</span>
+                                    <span className="cmd" onClick={() => deleteTask(task.id)}>[x]</span>
                                 </li>
                             )
                         }
