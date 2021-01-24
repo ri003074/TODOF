@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 const App = () => {
+    const [editTask, setEditTask] = useState('')
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
     const [userInfo, setUserInfo] = useState({ username: '', email: '', password1: '', password2: '' })
     const [userId, setUserId] = useState('')
-    const [editTask, setEditTask] = useState('')
 
     useEffect(() => {
 
@@ -67,6 +67,7 @@ const App = () => {
                 console.log(error)
             })
     }
+
     const logIn = () => {
         const logInInfo = {
             username: userInfo.username,
@@ -86,6 +87,7 @@ const App = () => {
                 localStorage.clear()
             })
     }
+
     const logOut = () => {
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/logout/`, {
         }).then(res => {
@@ -101,7 +103,7 @@ const App = () => {
             user_id: userId
         }
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/api/tasks/`, data, {
-        // axios.post(`http://localhost:8000/api/tasks/`, data, {
+            // axios.post(`http://localhost:8000/api/tasks/`, data, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': localStorage.getItem('token')
