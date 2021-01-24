@@ -7,8 +7,11 @@ const App = () => {
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
     const [userInfo, setUserInfo] = useState({ username: '', email: '', password1: '', password2: '' })
+    const [userId, setUserId] = useState('')
+    const [editTask, setEditTask] = useState('')
 
     useEffect(() => {
+
         setToken(localStorage.getItem('token'))
         axios.get('https://enigmatic-stream-15237.herokuapp.com/api/tasks/',
             // axios.get(`http://localhost:8000/api/tasks/`,
@@ -24,7 +27,19 @@ const App = () => {
                 localStorage.clear()
             })
 
-
+        axios.get('https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/user/',
+            // axios.get(`http://localhost:8000/dj-rest-auth/user/`,
+            {
+                headers: {
+                    Authorization: localStorage.getItem('token'),
+                }
+            })
+            .then(res => {
+                setUserId(res.data.pk)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }, [])
 
     const handleUserInfoChange = () => evt => {
@@ -32,13 +47,16 @@ const App = () => {
         const name = evt.target.name;
         setUserInfo({ ...userInfo, [name]: value })
     }
+
+    const handleInputChange = () => evt => {
+        setEditTask(evt.target.value)
+    }
+
     const SignUp = () => {
-        console.log("sign up!")
-        console.log(userInfo)
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/registration/`, userInfo, {
+            // axios.post(`http://localhost:8000/dj-rest-auth/registration/`, userInfo, {
         })
             .then(res => {
-                console.log(res)
                 setToken("Token " + res.data.key);
                 localStorage.clear();
                 localStorage.setItem('token', "Token " + res.data.key);
@@ -50,17 +68,15 @@ const App = () => {
             })
     }
     const logIn = () => {
-        console.log("login!")
-        console.log(userInfo)
         const logInInfo = {
             username: userInfo.username,
             email: userInfo.email,
             password: userInfo.password1,
         }
         axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/login/`, logInInfo, {
+            // axios.post(`http://localhost:8000/dj-rest-auth/login/`, logInInfo, {
         })
             .then(res => {
-                console.log(res)
                 setToken("Token " + res.data.key);
                 localStorage.clear();
                 localStorage.setItem('token', "Token " + res.data.key);
@@ -68,7 +84,6 @@ const App = () => {
             })
             .catch((error) => {
                 localStorage.clear()
-                console.log(error)
             })
     }
     const logOut = () => {
@@ -78,6 +93,20 @@ const App = () => {
             window.location.reload()
         })
 
+    }
+
+    const newTask = (task) => {
+        const data = {
+            title: task,
+            user_id: userId
+        }
+        axios.post(`https://enigmatic-stream-15237.herokuapp.com/api/tasks/`, data, {
+        // axios.post(`http://localhost:8000/api/tasks/`, data, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            }
+        }).then(res => setTasks([...tasks, res.data]))
     }
 
     return (
@@ -115,6 +144,8 @@ const App = () => {
                                 </li>
                             )
                         }
+                        <input type="text" className="form-control form-control-sm mb-2 p-1 col-12" name="title" placeholder="New Task" value={editTask} onChange={handleInputChange()} />
+                        <button className="btn btn-outline-dark col-12" onClick={() => newTask(editTask)}>Add</button>
                     </ul>
                 ) : (
                         <>
