@@ -4,8 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
 const App = () => {
-    // const [url] = useState("http://localhost:8000")
-    const [url] = useState("https://enigmatic-stream-15237.herokuapp.com")
+    const [url] = useState("http://localhost:8000")
+    // const [url] = useState("https://enigmatic-stream-15237.herokuapp.com")
 
     const [editTask, setEditTask] = useState('')
     const [tasks, setTasks] = useState([])
@@ -107,7 +107,7 @@ const App = () => {
                 'Content-type': 'application/json',
                 'Authorization': localStorage.getItem('token')
             }
-        }).then(res => setTasks([...tasks, res.data]))
+        }).then(res => { setTasks([...tasks, res.data]); setEditTask('') })
     }
 
     const deleteTask = (id) => {
