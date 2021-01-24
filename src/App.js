@@ -6,7 +6,7 @@ import './App.css'
 const App = () => {
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
-    const [userInfo, setUserInfo] = useState({ username: '', email: '', password: '' })
+    const [userInfo, setUserInfo] = useState({ username: '', email: '', password1: '', password2: '' })
 
     useEffect(() => {
         setToken(localStorage.getItem('token'))
@@ -32,10 +32,32 @@ const App = () => {
         const name = evt.target.name;
         setUserInfo({ ...userInfo, [name]: value })
     }
+    const SignUp = () => {
+        console.log("sign up!")
+        console.log(userInfo)
+        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/registration/`, userInfo, {
+        })
+            .then(res => {
+                console.log(res)
+                setToken("Token " + res.data.key);
+                localStorage.clear();
+                localStorage.setItem('token', "Token " + res.data.key);
+                window.location.reload()
+            })
+            .catch((error) => {
+                localStorage.clear()
+                console.log(error)
+            })
+    }
     const logIn = () => {
         console.log("login!")
         console.log(userInfo)
-        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/login/`, userInfo, {
+        const logInInfo = {
+            username: userInfo.username,
+            email: userInfo.email,
+            password: userInfo.password1,
+        }
+        axios.post(`https://enigmatic-stream-15237.herokuapp.com/dj-rest-auth/login/`, logInInfo, {
         })
             .then(res => {
                 console.log(res)
@@ -98,9 +120,11 @@ const App = () => {
                         <>
                             <input type="text" className="form-control form-control-sm mb-2 p-1" name="username" placeholder="username" value={userInfo.username} onChange={handleUserInfoChange()} />
                             <input type="text" className="form-control form-control-sm mb-2 p-1" name="email" placeholder="email" value={userInfo.email} onChange={handleUserInfoChange()} />
-                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password" placeholder="password" value={userInfo.password} onChange={handleUserInfoChange()} />
+                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password1" placeholder="password1" value={userInfo.password1} onChange={handleUserInfoChange()} />
+                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password2" placeholder="password2 for SiguUp" value={userInfo.password2} onChange={handleUserInfoChange()} />
                             <div className="text-right">
-                                <button className="btn btn-outline-dark col-12" onClick={() => logIn()}>logIn</button>
+                                <button className="btn btn-outline-dark col-12 mb-2" onClick={() => logIn()}>logIn</button>
+                                <button className="btn btn-outline-dark col-12" onClick={() => SignUp()}>SignUp</button>
                             </div>
                         </>
                     )
