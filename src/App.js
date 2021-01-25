@@ -146,6 +146,10 @@ const App = () => {
         }).then(res => setTasks(tasks.filter(task => task.id !== id)))
     }
 
+    const remaining = tasks.filter(task => {
+        return !task.is_done;
+    })
+
     return (
         <div className="container">
             {
@@ -158,7 +162,7 @@ const App = () => {
                             </div>
                         </div>
                             My Todos
-                        <span>(1/2)</span>
+                        <span>({remaining.length}/{tasks.length})</span>
                     </h1>
                 ) : (
                         <>
