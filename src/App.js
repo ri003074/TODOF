@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
+import Header from './components/Header'
 
 const App = () => {
-    // const [url] = useState("http://localhost:8000")
-    const [url] = useState("https://enigmatic-stream-15237.herokuapp.com")
+    const [url] = useState("http://localhost:8000")
+    // const [url] = useState("https://enigmatic-stream-15237.herokuapp.com")
 
     const [editTask, setEditTask] = useState('')
     const [tasks, setTasks] = useState([])
@@ -113,15 +114,6 @@ const App = () => {
             })
     }
 
-    const logOut = () => {
-        axios.post(`${url}/dj-rest-auth/logout/`, {
-        }).then(res => {
-            localStorage.setItem("token", "");
-            window.location.reload()
-        })
-
-    }
-
     const newTask = (task) => {
         // console.log("new task")
         // console.log(userId)
@@ -152,24 +144,7 @@ const App = () => {
 
     return (
         <div className="container">
-            {
-                token ? (
-                    <h1>
-                        <div className="dropdown">
-                            <button className="dropbtn">Menu</button>
-                            <div className="dropdown-content">
-                                <div className="dropdown-content-item" onClick={() => logOut()}>logOut</div>
-                            </div>
-                        </div>
-                            My Todos
-                        <span>({remaining.length}/{tasks.length})</span>
-                    </h1>
-                ) : (
-                        <>
-                            <h1 className="text-center">My Todos</h1>
-                        </>
-                    )
-            }
+            <Header token={token} remaining={remaining} tasks={tasks} url={url} />
             {
                 token ? (
                     <ul>
