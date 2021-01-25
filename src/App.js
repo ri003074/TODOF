@@ -23,6 +23,7 @@ const App = () => {
                 }
             })
             .then(res => {
+                console.log(res.data)
                 setTasks(res.data);
             })
             .catch((error) => {
@@ -36,6 +37,7 @@ const App = () => {
                 }
             })
             .then(res => {
+                console.log(res.data)
                 setUserId(res.data.pk)
             })
             .catch((error) => {
@@ -51,6 +53,29 @@ const App = () => {
 
     const handleInputChange = () => evt => {
         setEditTask(evt.target.value)
+    }
+
+    const handleCheckboxChange = (task, index) => {
+        const tasks_copy = tasks.slice()
+        tasks_copy[index].is_done = !tasks_copy[index].is_done
+        setTasks(tasks_copy)
+        tasks_copy[index]["user_uid"] = task.user.id
+
+        axios.put(`${url}/api/tasks/${task.id}/`, tasks_copy[index],
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': localStorage.getItem('token'),
+                }
+            })
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch((error) => {
+                console.log(error)
+                // localStorage.clear()
+            })
+
     }
 
     const SignUp = () => {
@@ -98,9 +123,11 @@ const App = () => {
     }
 
     const newTask = (task) => {
+        // console.log("new task")
+        // console.log(userId)
         const data = {
             title: task,
-            user_id: userId
+            user_uid: userId
         }
         axios.post(`${url}/api/tasks/`, data, {
             headers: {
@@ -147,8 +174,8 @@ const App = () => {
 
                                 <li key={task.id}>
                                     <label>
-                                        <input type="checkbox" />
-                                        <span className="">
+                                        <input type="checkbox" checked={task.is_done} onChange={() => handleCheckboxChange(task, index)} />
+                                        <span className={task.is_done ? 'done' : ''}>
                                             {task.title}
                                         </span>
                                     </label>
