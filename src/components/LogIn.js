@@ -4,7 +4,6 @@ import axios from 'axios'
 
 
 const LogIn = (values) => {
-    const [token, setToken] = useState([])
     const [userInfo, setUserInfo] = useState({ username: '', email: '', password1: '', password2: '' })
 
     const handleUserInfoChange = () => evt => {
@@ -17,7 +16,6 @@ const LogIn = (values) => {
         axios.post(`${values.url}/dj-rest-auth/registration/`, userInfo, {
         })
             .then(res => {
-                setToken("Token " + res.data.key);
                 localStorage.clear();
                 localStorage.setItem('token', "Token " + res.data.key);
                 window.location.reload()
@@ -38,7 +36,6 @@ const LogIn = (values) => {
         axios.post(`${values.url}/dj-rest-auth/login/`, logInInfo, {
         })
             .then(res => {
-                setToken("Token " + res.data.key);
                 localStorage.clear();
                 localStorage.setItem('token', "Token " + res.data.key);
                 window.location.reload()
