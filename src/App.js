@@ -100,13 +100,9 @@ const App = () => {
         }).then(res => setTasks(tasks.filter(task => task.id !== id)))
     }
 
-    const remaining = tasks.filter(task => {
-        return !task.is_done;
-    })
-
     return (
         <div className="container">
-            <Header token={token} remaining={remaining} tasks={tasks} url={url} />
+            <Header token={token} tasks={tasks} url={url} />
             {
                 token ? (
                     <ul>

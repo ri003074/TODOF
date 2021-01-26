@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 
 const Header = (values) => {
+
     const logOut = () => {
         axios.post(`${values.url}/dj-rest-auth/logout/`, {
         }).then(res => {
@@ -9,8 +10,13 @@ const Header = (values) => {
             window.location.reload()
         })
     }
+
+    const remaining = values.tasks.filter(task => {
+        return !task.is_done;
+    })
+
     return (
-        <div>
+        <>
             {
                 values.token ? (
                     <h1>
@@ -21,7 +27,7 @@ const Header = (values) => {
                             </div>
                         </div>
                             My Todos
-                        <span>({values.remaining.length}/{values.tasks.length})</span>
+                        <span>({remaining.length}/{values.tasks.length})</span>
                     </h1>
                 ) : (
                         <>
@@ -29,7 +35,7 @@ const Header = (values) => {
                         </>
                     )
             }
-        </div>
+        </>
     )
 }
 
