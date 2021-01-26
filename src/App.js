@@ -3,6 +3,7 @@ import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import Header from './components/Header'
+import Login from './components/LogIn'
 
 const App = () => {
     const [url] = useState("http://localhost:8000")
@@ -11,7 +12,6 @@ const App = () => {
     const [editTask, setEditTask] = useState('')
     const [tasks, setTasks] = useState([])
     const [token, setToken] = useState([])
-    const [userInfo, setUserInfo] = useState({ username: '', email: '', password1: '', password2: '' })
     const [userId, setUserId] = useState('')
 
     useEffect(() => {
@@ -46,11 +46,6 @@ const App = () => {
             })
     }, [url])
 
-    const handleUserInfoChange = () => evt => {
-        const value = evt.target.value
-        const name = evt.target.name;
-        setUserInfo({ ...userInfo, [name]: value })
-    }
 
     const handleInputChange = () => evt => {
         setEditTask(evt.target.value)
@@ -79,40 +74,7 @@ const App = () => {
 
     }
 
-    const SignUp = () => {
-        axios.post(`${url}/dj-rest-auth/registration/`, userInfo, {
-        })
-            .then(res => {
-                setToken("Token " + res.data.key);
-                localStorage.clear();
-                localStorage.setItem('token', "Token " + res.data.key);
-                window.location.reload()
-            })
-            .catch((error) => {
-                localStorage.clear()
-                console.log(error)
-            })
-    }
 
-    const logIn = () => {
-        const logInInfo = {
-            username: userInfo.username,
-            email: userInfo.email,
-            password: userInfo.password1,
-        }
-
-        axios.post(`${url}/dj-rest-auth/login/`, logInInfo, {
-        })
-            .then(res => {
-                setToken("Token " + res.data.key);
-                localStorage.clear();
-                localStorage.setItem('token', "Token " + res.data.key);
-                window.location.reload()
-            })
-            .catch((error) => {
-                localStorage.clear()
-            })
-    }
 
     const newTask = (task) => {
         // console.log("new task")
@@ -167,14 +129,7 @@ const App = () => {
                     </ul>
                 ) : (
                         <>
-                            <input type="text" className="form-control form-control-sm mb-2 p-1" name="username" placeholder="username" value={userInfo.username} onChange={handleUserInfoChange()} />
-                            <input type="text" className="form-control form-control-sm mb-2 p-1" name="email" placeholder="email" value={userInfo.email} onChange={handleUserInfoChange()} />
-                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password1" placeholder="password1" value={userInfo.password1} onChange={handleUserInfoChange()} />
-                            <input type="password" className="form-control form-control-sm mb-2 p-1" name="password2" placeholder="password2 for SiguUp" value={userInfo.password2} onChange={handleUserInfoChange()} />
-                            <div className="text-right">
-                                <button className="btn btn-outline-dark col-12 mb-2" onClick={() => logIn()}>logIn</button>
-                                <button className="btn btn-outline-dark col-12" onClick={() => SignUp()}>SignUp</button>
-                            </div>
+                            <Login url={url} />
                         </>
                     )
             }
