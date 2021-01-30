@@ -26,6 +26,25 @@ const LogIn = (values) => {
             })
     }
 
+    const SignUpWithTasks = () => {
+        if (userInfo.password1 === userInfo.password2) {
+            const userInfo_tmp = {
+                username: userInfo.username,
+                email: userInfo.email,
+                password: userInfo.password1,
+            }
+            axios.post(`${values.url}/api/users/`, userInfo_tmp, {
+            })
+                .then(res => {
+                    logIn()
+                })
+                .catch((error) => {
+                    localStorage.clear()
+                    console.log(error)
+                })
+        }
+    }
+
     const logIn = () => {
         const logInInfo = {
             username: userInfo.username,
@@ -53,7 +72,8 @@ const LogIn = (values) => {
             <input type="password" className="form-control form-control-sm mb-2 p-1" name="password2" placeholder="password2 for SiguUp" value={userInfo.password2} onChange={handleUserInfoChange()} />
             <div className="text-right">
                 <button className="btn btn-outline-dark col-12 mb-2" onClick={() => logIn()}>logIn</button>
-                <button className="btn btn-outline-dark col-12" onClick={() => SignUp()}>SignUp</button>
+                <button className="btn btn-outline-dark col-12 mb-2" onClick={() => SignUp()}>SignUp</button>
+                <button className="btn btn-outline-dark col-12" onClick={() => SignUpWithTasks()}>SignUp With Tasks</button>
             </div>
         </>
     );
